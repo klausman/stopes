@@ -6,8 +6,8 @@
     "setup": false,
     "model_files": [
         "model_generation.json",
-        "dict.txt",
-        "wiki.spm"
+        "sentencepiece.bpe.model",
+        "dict.txt"
     ],
     "exclude": []
 }

@@ -136,12 +136,13 @@ node_modules/
 # Wikimedia stuff
 *.zip
 awsenv
-misc/aws_publish/wikipedia_distillated/Dockerfile
-misc/aws_publish/wikipedia_distillated/checkpoint.pt
-misc/aws_publish/wikipedia_distillated/config.properties
-misc/aws_publish/wikipedia_distillated/dict.*
-misc/aws_publish/wikipedia_distillated/dockerd-entrypoint.sh
-misc/aws_publish/wikipedia_distillated/exclude.txt
-misc/aws_publish/wikipedia_distillated/sentencepiece.bpe.model
-misc/aws_publish/wikipedia_distillated/setup_config.json
-misc/aws_publish/wikipedia_distillated/tmp/
+misc/aws_publish/wikipedia-distillated/Dockerfile
+misc/aws_publish/wikipedia-distillated/checkpoint.pt
+misc/aws_publish/wikipedia-distillated/config.properties
+misc/aws_publish/wikipedia-distillated/dict.*
+misc/aws_publish/wikipedia-distillated/dockerd-entrypoint.sh
+misc/aws_publish/wikipedia-distillated/exclude.txt
+misc/aws_publish/wikipedia-distillated/sentencepiece.bpe.model
+misc/aws_publish/wikipedia-distillated/setup_config.json
+misc/aws_publish/wikipedia-distillated/tmp/
+misc/aws_publish/flores101*

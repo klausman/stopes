@@ -48,6 +48,8 @@ class ModelDeployer:
         self.use_gpu = use_gpu
 
         self.instance_type = "ml.g4dn.4xlarge"
+        # TODO: delete once above instance is available
+        self.instance_type = "ml.t2.xlarge" 
         self.instance_count = 2
         self.endpoint_name = endpoint_name
         self.endpoint_config_name = "-".join(
@@ -268,15 +270,19 @@ class ModelDeployer:
         image_ecr_path = self.image_ecr_path
         logger.info(f"Deploying model {self.name} to Sagemaker")
         sm = self.env["sagemaker_client"]
-        create_model_response = sm.create_model(
-            ModelName=self.name,
-            ExecutionRoleArn=config["arn_role"],
-            EnableNetworkIsolation=True,
-            PrimaryContainer={
-                "Image": self.image_ecr_path,
-                "ModelDataUrl": self.model_s3_path(),
-            },
-        )
+        create_model_response=""
+        try:
+            create_model_response = sm.create_model(
+                ModelName=self.name,
+                ExecutionRoleArn=config["arn_role"],
+                EnableNetworkIsolation=True,
+                PrimaryContainer={
+                    "Image": self.image_ecr_path,
+                    "ModelDataUrl": self.model_s3_path(),
+                },
+            )
+        except Exception as e:
+            print("%r", e)
         print(create_model_response)
 
     def create_endpoint_config(self):

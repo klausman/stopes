@@ -13,8 +13,8 @@ if [[ -d $MODEL_STORE ]] ; then
     ls $MODEL_STORE/*
 fi
 
-echo "--- working dir content: ---"
-ls .
+echo "--- working dir [$(pwd)] content: ---"
+ls -l .
 
 torchserve --start --foreground \
     --ts-config /home/model-server/config.properties \

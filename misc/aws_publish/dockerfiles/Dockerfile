@@ -17,6 +17,8 @@ COPY dockerd-entrypoint.sh /usr/local/bin/dockerd-entrypoint.sh
 RUN chmod +x /usr/local/bin/dockerd-entrypoint.sh
 
 RUN mkdir -p /home/model-server/ && mkdir -p /home/model-server/tmp
+RUN mkdir -p /opt/ml/model/wikipedia-distillated
+
 COPY config.properties /home/model-server/config.properties
 
 ENV TEMP=/home/model-server/tmp
