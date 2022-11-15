@@ -303,25 +303,28 @@ class ModelDeployer:
         }
         extra_args = {"DataCaptureConfig": data_capture} if prod else {}
         sm = self.env["sagemaker_client"]
-
-        create_endpoint_config_response = sm.create_endpoint_config(
-            EndpointConfigName=prodname(self.endpoint_config_name, prod),
-            ProductionVariants=[
-                {
-                    "ModelName": self.name,
-                    "VariantName": self.name,
-                    "InstanceType": self.instance_type,
-                    "InitialInstanceCount": self.instance_count if prod else 1,
-                    "InitialVariantWeight": 1.0,
-                }
-            ],
-            Tags=[
-                {"Key": "model", "Value": self.name},
-                {"Key": "instance", "Value": self.instance_type},
-                {"Key": "env", "Value": "prod"},
-            ],
-            **extra_args,
-        )
+        create_endpoint_config_response = ""
+        try:
+            create_endpoint_config_response = sm.create_endpoint_config(
+                EndpointConfigName=prodname(self.endpoint_config_name, prod),
+                ProductionVariants=[
+                    {
+                        "ModelName": self.name,
+                        "VariantName": self.name,
+                        "InstanceType": self.instance_type,
+                        "InitialInstanceCount": self.instance_count if prod else 1,
+                        "InitialVariantWeight": 1.0,
+                    }
+                ],
+                Tags=[
+                    {"Key": "model", "Value": self.name},
+                    {"Key": "instance", "Value": self.instance_type},
+                    {"Key": "env", "Value": "prod"},
+                ],
+                **extra_args,
+            )
+        except Exception as e:
+            print ("Endpoint probably already exists:", e)
         print(create_endpoint_config_response)
 
     def update_endpoint_config(self, prod: bool):
