@@ -41,7 +41,7 @@ class ModelDeployer:
     ):
         self._src_dir = src_dir
         if not name:
-            name = src_dir.name + datetime.datetime.now().strftime("-%y-%m-%d-%H-%M-%S")
+            name = src_dir.name + datetime.datetime.now().strftime("-%Y%m%d-%H%M%S")
             name = name.lower()
         assert re.match("[a-z0-9-]+", name), f"Name must be lowercase"
         self.name = name
