@@ -6,17 +6,22 @@
 
 set -ex
 
-echo "will load model" $MODEL_STORE $MODEL_NAME
+echo "will load model $MODEL_STORE $MODEL_NAME"
 printenv
 echo "--- model store content: $MODEL_STORE ---"
 if [[ -d $MODEL_STORE ]] ; then
-    ls $MODEL_STORE/*
+    ls "$MODEL_STORE"/*
 fi
 
 echo "--- working dir [$(pwd)] content: ---"
 ls -l .
 
+set +e
+ls -l ../tmp/models/*/
+cp -a dict*txt ../tmp/models/*/
+ls -l ../tmp/models/*/
+
 torchserve --start --foreground \
     --ts-config /home/model-server/config.properties \
-    --model-store $MODEL_STORE \
-    --models $MODEL_NAME \
+    --model-store "$MODEL_STORE" \
+    --models "$MODEL_NAME"
