@@ -24,7 +24,7 @@ expiration=$(echo "$awsjson"|jq .Credentials.Expiration|tr -d \")
 
 {
 	echo export AWS_ACCESS_KEY_ID=\""$keyid"\" 
-	echo export AWS_SECRET_ACCESS_KEY_ID=\""$key"\"
+	echo export AWS_SECRET_ACCESS_KEY=\""$key"\"
 	echo export AWS_SESSION_TOKEN=\""$token"\"
 } > "$envfile"
 
