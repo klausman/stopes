@@ -48,8 +48,6 @@ class ModelDeployer:
         self.use_gpu = use_gpu
 
         self.instance_type = "ml.g4dn.4xlarge"
-        # TODO: delete once above instance is available
-        self.instance_type = "ml.t2.xlarge" 
         self.instance_count = 2
         self.endpoint_name = endpoint_name
         self.endpoint_config_name = "-".join(

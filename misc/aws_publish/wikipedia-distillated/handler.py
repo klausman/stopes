@@ -158,7 +158,7 @@ class Handler(BaseHandler):
             [model], cfg, task = fairseq.checkpoint_utils.load_model_ensemble_and_task(
                 [model_pt_path],
                 arg_overrides={
-                    "data": ".",
+                    "data": "/home/model-server/code/",
                     "source_lang": "eng",
                     "target_lang": "ibo",
                     "add_data_source_prefix_tags": False,
