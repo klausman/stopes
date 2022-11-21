@@ -47,7 +47,7 @@ RUN cd /tmp \
 
 # Install NLLB branch of fairseq, with GPU support
 RUN python -m pip install --no-cache-dir torch==1.12.1+cu113 torchaudio==0.12.1+cu113 torchserve -f https://download.pytorch.org/whl/torch_stable.html
-RUN git clone https://github.com/facebookresearch/fairseq --branch nllb --depth 5 fairseq_repo
+RUN git clone https://github.com/klausman/fairseq/ --branch wmfnllb --depth 5 fairseq_repo
 RUN cd fairseq_repo; pip install -e '.[dev]'
 
 WORKDIR /home/model-server/code

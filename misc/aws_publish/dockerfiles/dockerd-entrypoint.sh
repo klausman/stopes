@@ -16,6 +16,11 @@ fi
 echo "--- working dir [$(pwd)] content: ---"
 ls -l .
 
+set +e
+ls -l ../tmp/models/*/
+cp -a dict*txt ../tmp/models/*/
+ls -l ../tmp/models/*/
+
 torchserve --start --foreground \
     --ts-config /home/model-server/config.properties \
     --model-store "$MODEL_STORE" \

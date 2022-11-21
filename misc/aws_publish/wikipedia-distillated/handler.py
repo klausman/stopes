@@ -132,7 +132,8 @@ class Handler(BaseHandler):
         model_pt_path = os.path.join(
             properties["model_dir"], context.manifest["model"]["serializedFile"]
         )
-        model_file_dir = properties["model_dir"]
+        #model_file_dir = properties["model_dir"]
+        model_file_dir = "/home/model-server/code/"
         self.device = (
             "cuda:" + str(properties["gpu_id"])
             if properties.get("gpu_id") is not None and torch.cuda.is_available()
