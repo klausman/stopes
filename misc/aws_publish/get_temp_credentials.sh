@@ -35,6 +35,7 @@ echo source "$envfile"
 echo to load the credentials into your current shell.
 
 if [[ -z $AWS_ACCOUNT ]]; then
-    echo Note that the AWS_ACCOUNT env var is empty.
+    echo '   **WARNING**'
+    echo The AWS_ACCOUNT env var is empty or unset.
     echo Running e.g. deploy.py will not work without it.
 fi

@@ -103,17 +103,7 @@ class Context(NamedTuple):
 
 
 class Handler(BaseHandler):
-    """Use Fairseq model for translation.
-    To use this handler, download one of the Flores pretrained model:
-
-    615M parameters:
-        https://dl.fbaipublicfiles.com/flores101/pretrained_models/flores101_mm100_615M.tar.gz
-    175M parameters:
-        https://dl.fbaipublicfiles.com/flores101/pretrained_models/flores101_mm100_175M.tar.gz
-
-    and extract the files next to this one.
-    Notably there should be a "dict.txt" and a "sentencepiece.bpe.model".
-    """
+    """Use Fairseq model for translation."""
 
     def __init__(self):
         super().__init__()
