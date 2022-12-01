@@ -1,15 +1,15 @@
 import boto3
 import json
 import os
+import logging
+
+logger = logging.getLogger()
+logger.setLevel(logging.INFO)
 
 runtime = boto3.client("sagemaker-runtime")
-ENDPOINT_NAME = os.environ["ENDPOINT_NAME"]
-SECRET = os.environ["SECRET"]
-STAGING_SECRET = os.environ["STAGING_SECRET"]
 
-assert SECRET
-assert STAGING_SECRET
-assert ENDPOINT_NAME
+SECRET = os.environ.get("SECRET")
+STAGING_SECRET = os.environ.get("STAGING_SECRET")
 
 WIKI2ISO = {
     "as": "asm", # Assamese
@@ -47,45 +47,43 @@ WIKI2ISO = {
     "zu": "zul", # Zulu
 }
 
-def lambda_handler(event, context):
-    """
-    {
-      "samples": [
-        {
-          "uid": "sample0",
-          "sourceText": "It is a good day !",
-          "sourceLanguage": "en",
-          "targetLanguage": "zh",
-        }
-      ],
-      "model_name": "endpoint-name",
-      "secret": "some_top_secret"
+def mk_response(status, headers, body):
+    hdrs = { "Content-Type": "application/json" }
+    hdrs.update(headers)
+    return {
+        "statusCode": status,
+        "headers": hdrs,
+        "body": body,
+        "isBase64Encoded": False,
     }
 
-            returns - a json object with probability and signed. Passthrough from model
-    """
-    if event.get("secret") not in (SECRET, STAGING_SECRET):
-        raise Exception("Invalid authentication")
-    endpoint = event.get("model_name", ENDPOINT_NAME)
-    if event.get("secret") == STAGING_SECRET:
-        endpoint = "wikipedia-staging"
 
-    for sample in event["samples"]:
-        src = sample["sourceLanguage"]
-        tgt = sample["targetLanguage"]
+def lambda_handler(event, context):
+    # TODO(klausman): handle errors when deserializing request JSON
+    data=json.loads(event.get("body"))
+
+    if data.get("secret") not in (SECRET, STAGING_SECRET):
+        return mk_response(403, {}, {"error": "No or incorrect API secret specified"})
+
+    endpoint = "nllb200"
+    if data.get("secret") == STAGING_SECRET:
+        endpoint = "nllb200-staging"
+
+    logging.info("Using endpoint '%s'" , (endpoint))
+
+    for sample in data["samples"]:
+        # TODO(klausman): handle broken src/tgt language better
+        src = sample.get("sourceLanguage", "sourceLanguageUnset")
+        tgt = sample.get("targetLanguage", "targetLanguageUnset")
         try:
             sample["sourceLanguage"] = WIKI2ISO[src]
             sample["targetLanguage"] = WIKI2ISO[tgt]
         except KeyError as e:
-            error_message = f"CLIENTERROR Unknown language in {src}->{tgt}. Chose from: {', '.join(WIKI2ISO.keys())}"
+            return mk_response(403, {}, {"error": f"Unknown language in {src}->{tgt}. Chose from: {', '.join(WIKI2ISO.keys())}"})
 
-            return error_message
-
-
-    payload = "\n".join(json.dumps(s) for s in event["samples"])
+    payload = "\n".join(json.dumps(s) for s in data["samples"])
 
     # Invoke sagemaker endpoint to get model result
-    assert endpoint
     try:
         response = runtime.invoke_endpoint(
             EndpointName=endpoint,
@@ -95,6 +93,8 @@ def lambda_handler(event, context):
         result = response["Body"].read()
     except Exception as ex:
         print("Exception = ", ex)
-        raise
+        return mk_response(500, {}, {"error": "Internal server error: %s"%(ex)})
 
-    return result
+        raise
+    logging.info("Response: %s" % (result))
+    return mk_response(200, {"Endpoint": endpoint}, result)

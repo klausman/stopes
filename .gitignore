@@ -145,4 +145,3 @@ misc/aws_publish/wikipedia-distillated/exclude.txt
 misc/aws_publish/wikipedia-distillated/sentencepiece.bpe.model
 misc/aws_publish/wikipedia-distillated/setup_config.json
 misc/aws_publish/wikipedia-distillated/tmp/
-misc/aws_publish/flores101*
