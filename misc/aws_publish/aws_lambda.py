@@ -8,8 +8,8 @@ logger.setLevel(logging.INFO)
 
 runtime = boto3.client("sagemaker-runtime")
 
-SECRET = os.environ.get("SECRET")
-STAGING_SECRET = os.environ.get("STAGING_SECRET")
+SECRET_PROD = os.environ.get("SECRET_PROD")
+SECRET_STAGING = os.environ.get("SECRET_STAGING")
 
 WIKI2ISO = {
     "as": "asm", # Assamese
@@ -57,16 +57,15 @@ def mk_response(status, headers, body):
         "isBase64Encoded": False,
     }
 
-
 def lambda_handler(event, context):
     # TODO(klausman): handle errors when deserializing request JSON
     data=json.loads(event.get("body"))
 
-    if data.get("secret") not in (SECRET, STAGING_SECRET):
+    if data.get("secret") not in (SECRET_PROD, SECRET_STAGING):
         return mk_response(403, {}, {"error": "No or incorrect API secret specified"})
 
     endpoint = "nllb200"
-    if data.get("secret") == STAGING_SECRET:
+    if data.get("secret") == SECRET_STAGING:
         endpoint = "nllb200-staging"
 
     logging.info("Using endpoint '%s'" , (endpoint))
