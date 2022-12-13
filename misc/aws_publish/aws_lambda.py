@@ -43,7 +43,7 @@ WIKI2ISO = {
     "wo": "wol", # Wolof
     "zh-yue": "yue", # Yue Chinese
     "yue": "yue",
-    "zh": "zho_simp", # Chinese
+    "zh": "zho_Hans", # Chinese
     "zu": "zul", # Zulu
 }
 
