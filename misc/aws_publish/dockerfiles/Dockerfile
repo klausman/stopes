@@ -19,10 +19,8 @@ COPY dockerd-entrypoint.sh /usr/local/bin/dockerd-entrypoint.sh
 RUN chmod +x /usr/local/bin/dockerd-entrypoint.sh
 
 RUN mkdir -p /home/model-server/ \
-    && mkdir -p /home/model-server/tmp \
     && mkdir -p /opt/ml/model/wikipedia-distillated
 
-ENV TEMP=/home/model-server/tmp
 ADD ${tarball} /home/model-server/runtime
 COPY config.properties /home/model-server/runtime/
 
@@ -58,11 +56,16 @@ RUN /usr/local/bin/pip3 install --target /opt/lib/python/site-packages --no-cach
 
 
 FROM nvidia/cuda:11.3.0-cudnn8-runtime-ubuntu20.04 as production
+# We have to "re-load" the args since FROM statements have scope.
+ARG model_store
+ARG model_name
 
 USER root
 RUN mkdir -p "/opt/lib/python" \
     && mkdir -p /home/model-server/logs \
+    && mkdir -p /home/model-server/tmp \
     && chown 65534:65534 /home/model-server/logs \
+    && chown 65534:65534 /home/model-server/tmp \
     && mkdir -p /opt/ml/model/wikipedia-distillated \
     && apt-get update \
     && apt-get install --no-install-recommends -y \
@@ -81,5 +84,6 @@ ENV PYTHONIOENCODING=UTF-8
 ENV MODEL_STORE=${model_store}
 ENV MODEL_NAME=${model_name}
 ENV PATH="/opt/lib/python/site-packages/bin:${PATH}" PYTHONPATH="/opt/lib/python/site-packages"
+ENV TEMP=/home/model-server/tmp
 ENTRYPOINT ["/usr/local/bin/dockerd-entrypoint.sh"]
 CMD ["serve"]

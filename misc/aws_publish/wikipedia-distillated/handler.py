@@ -123,7 +123,7 @@ class Handler(BaseHandler):
             properties["model_dir"], context.manifest["model"]["serializedFile"]
         )
         #model_file_dir = properties["model_dir"]
-        model_file_dir = "/home/model-server/code/"
+        model_file_dir = "/home/model-server/"
         self.device = (
             "cuda:" + str(properties["gpu_id"])
             if properties.get("gpu_id") is not None and torch.cuda.is_available()
@@ -148,7 +148,7 @@ class Handler(BaseHandler):
             [model], cfg, task = fairseq.checkpoint_utils.load_model_ensemble_and_task(
                 [model_pt_path],
                 arg_overrides={
-                    "data": "/home/model-server/code/",
+                    "data": "/home/model-server/",
                     "source_lang": "eng",
                     "target_lang": "ibo",
                     "add_data_source_prefix_tags": False,

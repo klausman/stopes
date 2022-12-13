@@ -4,6 +4,9 @@
 # This source code is licensed under the MIT license found in the
 # LICENSE file in the root directory of this source tree.
 
+# On AWS, /tmp is not wrtiable for non-root for some reason.
+export TEMP="/home/model-server/tmp"
+
 set -ex
 
 echo "will load model $MODEL_STORE $MODEL_NAME"
