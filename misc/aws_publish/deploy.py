@@ -399,7 +399,7 @@ def path_available_on_s3(s3_client, s3_bucket, path, perturb_prefix=None):
     return path in files
 
 
-def main(folder: Path, docker: str = "", prod: bool = False):
+def main(folder: Path, docker: str = "", prod: bool = False, nopush: bool = False):
     """Make a docker image with the given folder and publish it to AWS as a model.
     A number of files are expected to be present in the folder,
     notably the setup_config.json, handler.py and checkpoint.pt
@@ -414,6 +414,10 @@ def main(folder: Path, docker: str = "", prod: bool = False):
     logging.basicConfig(level=logging.INFO)
     deployer = ModelDeployer(folder, name=docker)
     deployer.build_docker(lazy=True)
+
+    if nopush:
+        logger.info("Flag --nopush was given, exiting")
+        return
 
     try:
         deployer.env
@@ -451,6 +455,12 @@ if __name__ == "__main__":
         action="store_true",
         default=False,
         help="❗ deploys the model to prod (instead of staging env) ❗",
+    )
+    parser.add_argument(
+        "--nopush",
+        action="store_true",
+        default=False,
+        help="Do not do any uploads or pushes to AWS",
     )
     args = vars(parser.parse_args())
     main(**args)

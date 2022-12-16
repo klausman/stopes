@@ -49,7 +49,7 @@ RUN apt-get update \
 
 WORKDIR /home/model-server/code
 # Install NLLB branch of fairseq, with GPU support
-RUN /usr/local/bin/pip3 install --target /opt/lib/python/site-packages --no-cache-dir torch==1.12.1+cu113 torchaudio==0.12.1+cu113 torchserve -f https://download.pytorch.org/whl/torch_stable.html \
+RUN /usr/local/bin/pip3 install --target /opt/lib/python/site-packages --no-cache-dir torch==1.13.1+cu116 torchaudio==0.13.1+cu116 torchserve -f https://download.pytorch.org/whl/torch_stable.html \
     && if [ ${requirements} = True ]; then /usr/local/bin/pip3 install --target /opt/lib/python/site-packages --no-cache-dir --force-reinstall -r /home/model-server/runtime/requirements.txt; fi \
     && git clone https://github.com/klausman/fairseq/ --branch wmfnllb --depth 5 fairseq_repo \
     && cd fairseq_repo && /usr/local/bin/pip3 install --target /opt/lib/python/site-packages --no-cache-dir '.[dev]'
